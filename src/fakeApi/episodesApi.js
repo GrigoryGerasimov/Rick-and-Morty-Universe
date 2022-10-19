@@ -1,4 +1,4 @@
-export const episodes = [
+const episodes = [
     {
         id: 1,
         name: "Pilot",
@@ -134,3 +134,35 @@ export const episodes = [
         created: "2017-11-10T12:56:35.772Z"
     }
 ];
+
+export const fetchAll = (year) => {
+    return new Promise((resolve) => {
+        const filterEpisodes = episodes.filter((episode) =>
+            year ? episode.airDate.slice(-4) === year : true
+        );
+        setTimeout(() => {
+            resolve(filterEpisodes);
+        }, 500);
+    });
+};
+
+export const fetchYears = () => {
+    return new Promise((resolve) => {
+        const years = episodes.map((episodeYear) =>
+            episodeYear.airDate.slice(-4)
+        );
+        const uniqueYears = [...new Set(years)];
+        const seasonsByYear = {
+            2013: "S01",
+            2014: "S02",
+            2015: "S03"
+        };
+        const filters = uniqueYears.map((uniqueYear) => ({
+            id: uniqueYear,
+            text: `${uniqueYear} (${seasonsByYear[uniqueYear]})`
+        }));
+        setTimeout(() => {
+            resolve(filters);
+        }, 2000);
+    });
+};
