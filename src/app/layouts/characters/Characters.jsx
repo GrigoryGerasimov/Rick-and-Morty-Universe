@@ -1,9 +1,8 @@
 import React from "react";
+import CharactersList from "./charactersList/CharactersList.jsx";
 
 const Characters = () => {
-    return (
-        <h1>Characters</h1>
-    );
+    return <CharactersList/>;
 };
 
 export default Characters;

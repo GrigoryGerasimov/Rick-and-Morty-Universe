@@ -12,7 +12,6 @@ export const EpisodesProvider = ({ children }) => {
     const [isLoading, setLoading] = useState(true);
     const [episodesData, setEpisodesData] = useState({});
     const [singleEpisodeData, setSingleEpisodeData] = useState({});
-    const [multipleEpisodesData, setMultipleEpisodesData] = useState([]);
 
     const errorCatcher = useCallback(error => {
         toast.error(error.response.data.error);
@@ -31,7 +30,7 @@ export const EpisodesProvider = ({ children }) => {
 
     const getSingleEpisodeData = async id => {
         try {
-            const data = episodeService.get(id);
+            const data = await episodeService.get(id);
             setSingleEpisodeData(data);
         } catch (error) {
             errorCatcher(error);
@@ -40,8 +39,8 @@ export const EpisodesProvider = ({ children }) => {
 
     const getMultipleEpisodesData = async(...id) => {
         try {
-            const data = episodesData.get(id);
-            setMultipleEpisodesData(data);
+            const data = await episodeService.get(id);
+            return !Array.isArray(data) && typeof data === "object" ? [data] : data;
         } catch (error) {
             errorCatcher(error);
         }
@@ -55,7 +54,6 @@ export const EpisodesProvider = ({ children }) => {
         <EpisodesContext.Provider value={{
             episodesData,
             singleEpisodeData,
-            multipleEpisodesData,
             getAllEpisodes,
             getSingleEpisodeData,
             getMultipleEpisodesData

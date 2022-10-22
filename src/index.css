@@ -55,3 +55,7 @@ body {
 .episodes-card {
     height: 300px !important;
 }
+
+.characters-card {
+    height: 750px !important;
+}

@@ -8,7 +8,7 @@ export const Pagination = ({ currentPage, pages, onPageChange }) => {
 
     return (
         <nav className="m-5">
-            <ul className="pagination justify-content-center">
+            <ul className="pagination justify-content-center flex-wrap">
                 {pageAmount.map((page) => (
                     <li
                         key={`page-${page}`}

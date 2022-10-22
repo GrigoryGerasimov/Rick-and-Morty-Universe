@@ -12,15 +12,14 @@ export const CharactersProvider = ({ children }) => {
     const [isLoading, setLoading] = useState(true);
     const [charactersData, setCharactersData] = useState({});
     const [singleCharacterData, setSingleCharacterData] = useState({});
-    const [multipleCharactersData, setMultipleCharactersData] = useState([]);
 
     const errorCatcher = useCallback(error => {
         toast.error(error.response.data.error);
     }, []);
 
-    const getAllCharacters = async() => {
+    const getAllCharacters = async(page = 1) => {
         try {
-            const data = await characterService.getAll();
+            const data = await characterService.getAll(page);
             setCharactersData(data);
         } catch (error) {
             errorCatcher(error);
@@ -41,7 +40,7 @@ export const CharactersProvider = ({ children }) => {
     const getMultipleCharactersById = async(...id) => {
         try {
             const data = await characterService.get(id);
-            setMultipleCharactersData(data);
+            return !Array.isArray(data) && typeof data === "object" ? [data] : data;
         } catch (error) {
             errorCatcher(error);
         }
@@ -55,7 +54,6 @@ export const CharactersProvider = ({ children }) => {
         <CharactersContext.Provider value={{
             singleCharacterData,
             charactersData,
-            multipleCharactersData,
             getSingleCharacterById,
             getAllCharacters,
             getMultipleCharactersById
