@@ -1,13 +1,8 @@
 import React from "react";
-import { EpisodesList } from "./episodesList/EpisodesList.jsx";
-import { EpisodesProvider } from "../../hooks/useEpisodes.jsx";
+import EpisodesList from "./episodesList/EpisodesList.jsx";
 
 const Episodes = () => {
-    return (
-        <EpisodesProvider>
-            <EpisodesList/>
-        </EpisodesProvider>
-    );
+    return <EpisodesList/>;
 };
 
 export default Episodes;

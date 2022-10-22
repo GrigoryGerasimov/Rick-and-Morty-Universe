@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Episode } from "./Episode.jsx";
 import { Pagination } from "../../../components/Pagination.jsx";
 import { useEpisodes } from "../../../hooks/useEpisodes.jsx";
 
-export const EpisodesList = () => {
+const EpisodesList = () => {
     const { episodesData, getAllEpisodes } = useEpisodes();
-    const { results: episodes, info: { pages } } = episodesData;
+    const { results: episodes, info: { pages } } = useMemo(() => episodesData, [episodesData]);
     const [currentPage, setCurrentPage] = useState(1);
 
     const handlePageChange = pageIndex => {
@@ -36,3 +36,5 @@ export const EpisodesList = () => {
         </div>
     );
 };
+
+export default EpisodesList;

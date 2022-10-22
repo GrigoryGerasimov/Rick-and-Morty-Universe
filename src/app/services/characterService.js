@@ -3,8 +3,8 @@ import httpService from "./httpService.js";
 const characterEndpoint = "character/";
 
 const characterService = {
-    getAll: async() => {
-        const { data } = await httpService.get(characterEndpoint);
+    getAll: async page => {
+        const { data } = await httpService.get(characterEndpoint, { params: { page } });
         return data;
     },
     get: async id => {
