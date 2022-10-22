@@ -19,7 +19,7 @@ export const Episode = ({ name, airDate, episode }) => {
 };
 
 Episode.propTypes = {
-    name: PropTypes.string.isRequired,
-    airDate: PropTypes.string.isRequired,
-    episode: PropTypes.string.isRequired
+    name: PropTypes.string,
+    airDate: PropTypes.string,
+    episode: PropTypes.string
 };

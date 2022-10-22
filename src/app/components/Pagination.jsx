@@ -1,5 +1,5 @@
 import React from "react";
-import _ from "lodash";
+import { getPageRange } from "../utils/getPageRange.js";
 import PropTypes from "prop-types";
 
 export const Pagination = ({
@@ -9,19 +9,17 @@ export const Pagination = ({
     onPageChange
 }) => {
     const pageCount = Math.ceil(itemsCount / pageSize);
-    const pages = _.range(1, pageCount + 1);
+    const pages = getPageRange(pageCount);
 
     if (pageCount === 1) return null;
 
     return (
-        <nav>
+        <nav className="m-5">
             <ul className="pagination justify-content-center">
                 {pages.map((page) => (
                     <li
                         key={`page-${page}`}
-                        className={`page-item ${
-                            page === currentPage ? `active` : ``
-                        }`}
+                        className={`page-item ${page === currentPage ? "active" : ""}`}
                     >
                         <button
                             className="page-link custom-page-link"
@@ -37,8 +35,8 @@ export const Pagination = ({
 };
 
 Pagination.propTypes = {
-    itemsCount: PropTypes.number.isRequired,
-    pageSize: PropTypes.number.isRequired,
-    currentPage: PropTypes.number.isRequired,
-    onPageChange: PropTypes.func.isRequired
+    itemsCount: PropTypes.number,
+    pageSize: PropTypes.number,
+    currentPage: PropTypes.number,
+    onPageChange: PropTypes.func
 };
