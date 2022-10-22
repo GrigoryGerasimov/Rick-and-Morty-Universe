@@ -1,9 +1,12 @@
 import React from "react";
 import { EpisodesList } from "./episodesList/EpisodesList.jsx";
+import { EpisodesProvider } from "../../hooks/useEpisodes.jsx";
 
 const Episodes = () => {
     return (
-        <EpisodesList/>
+        <EpisodesProvider>
+            <EpisodesList/>
+        </EpisodesProvider>
     );
 };
 
