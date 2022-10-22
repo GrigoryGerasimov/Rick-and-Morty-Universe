@@ -1,43 +1,20 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Episode } from "./Episode.jsx";
 import { Pagination } from "../../../components/Pagination.jsx";
-import { episodeService } from "../../../services";
-import { toast } from "react-toastify";
-
-const initEpisodesData = {
-    results: [],
-    info: {
-        count: 0
-    }
-};
+import { useEpisodes } from "../../../hooks/useEpisodes.jsx";
 
 export const EpisodesList = () => {
-    const [episodesData, setEpisodesData] = useState(initEpisodesData);
-    const { results: episodes, info: { count } } = episodesData;
+    const { episodesData, getAllEpisodes } = useEpisodes();
+    const { results: episodes, info: { pages } } = episodesData;
     const [currentPage, setCurrentPage] = useState(1);
-
-    const errorRenderer = useCallback(error => {
-        toast.error(error.response.data.error);
-    }, [episodesData]);
-
-    const getAllEpisodes = useCallback(async() => {
-        try {
-            const data = await episodeService.getAll(currentPage);
-            setEpisodesData(data);
-        } catch (error) {
-            errorRenderer(error);
-        }
-    }, [currentPage]);
-
-    useEffect(() => {
-        getAllEpisodes();
-    }, [getAllEpisodes]);
-
-    const pageSize = 20;
 
     const handlePageChange = pageIndex => {
         setCurrentPage(pageIndex);
     };
+
+    useEffect(() => {
+        getAllEpisodes(currentPage);
+    }, [currentPage]);
 
     return (
         <div className="container">
@@ -51,8 +28,7 @@ export const EpisodesList = () => {
             </div>
             <div className="row">
                 <Pagination
-                    itemsCount={count}
-                    pageSize={pageSize}
+                    pages={pages}
                     currentPage={currentPage}
                     onPageChange={handlePageChange}
                 />

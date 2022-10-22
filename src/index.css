@@ -51,3 +51,7 @@ body {
 .rick-and-morty-title {
     font-family: RickAndMorty, serif;
 }
+
+.episodes-card {
+    height: 300px !important;
+}
