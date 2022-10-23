@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext, useCallback, useMemo } from "react";
 import { characterService } from "../services";
 import Loader from "../components/Loader.jsx";
 import PropTypes from "prop-types";
@@ -10,7 +10,7 @@ export const useCharacters = () => useContext(CharactersContext);
 
 export const CharactersProvider = ({ children }) => {
     const [isLoading, setLoading] = useState(true);
-    const [charactersData, setCharactersData] = useState({});
+    const [charactersData, setCharactersData] = useState([]);
     const [singleCharacterData, setSingleCharacterData] = useState({});
 
     const errorCatcher = useCallback(error => {
@@ -25,6 +25,15 @@ export const CharactersProvider = ({ children }) => {
             errorCatcher(error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const getFilteredCharactersByName = async(name = "", page = 1) => {
+        try {
+            const data = await characterService.getFilteredByName(name, page);
+            setCharactersData(data);
+        } catch (error) {
+            errorCatcher(error);
         }
     };
 
@@ -51,13 +60,21 @@ export const CharactersProvider = ({ children }) => {
     }, []);
 
     return (
-        <CharactersContext.Provider value={{
+        <CharactersContext.Provider value={useMemo(() => ({
             singleCharacterData,
             charactersData,
-            getSingleCharacterById,
             getAllCharacters,
-            getMultipleCharactersById
-        }}>
+            getSingleCharacterById,
+            getMultipleCharactersById,
+            getFilteredCharactersByName
+        }), [
+            singleCharacterData,
+            charactersData,
+            getAllCharacters,
+            getSingleCharacterById,
+            getMultipleCharactersById,
+            getFilteredCharactersByName
+        ])}>
             {!isLoading ? children : <Loader/>}
         </CharactersContext.Provider>
     );

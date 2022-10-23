@@ -1,28 +1,28 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Loader from "../../../components/Loader";
 import { useCharacters } from "../../../hooks/useCharacters.jsx";
-import Loader from "../../../components/Loader.jsx";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 
-export const Episode = ({ name, air_date: airDate, episode, characters: charactersInEpisode }) => {
+const Location = ({ name, type, dimension, residents }) => {
     const [characters, setCharacters] = useState([]);
     const [isLoading, setLoading] = useState(true);
     const { getMultipleCharactersById } = useCharacters();
 
-    const charactersId = useMemo(() => {
-        return charactersInEpisode.map(character => character.slice(character.lastIndexOf("/") + 1));
-    }, [charactersInEpisode]);
+    const residentsId = useMemo(() => {
+        return residents.map(resident => resident.slice(resident.lastIndexOf("/") + 1));
+    }, [residents]);
 
     const getMultipleCharacters = useCallback(async() => {
         try {
-            const charactersData = await getMultipleCharactersById(charactersId.slice(0, 5));
+            const charactersData = await getMultipleCharactersById(residentsId.slice(0, 5));
             setCharacters(charactersData);
         } catch (error) {
             toast.error(error.response.data.error);
         } finally {
             setLoading(false);
         }
-    }, [getMultipleCharactersById, charactersId]);
+    }, [getMultipleCharactersById, residentsId]);
 
     useEffect(() => {
         getMultipleCharacters();
@@ -30,25 +30,28 @@ export const Episode = ({ name, air_date: airDate, episode, characters: characte
 
     return (
         <div className="col-4 mb-2">
-            <div className="card episodes-card">
+            <div className="card locations-card">
                 <div className="card-body">
-                    <h5 className="card-title fs-6">
-                        {episode}
-                    </h5>
                     <h5 className="card-title fs-6">
                         {name}
                     </h5>
+                    <h5 className="card-title fs-6">
+                        {type}
+                    </h5>
                     <h6 className="card-subtitle my-3 text-muted small">
-                        {airDate}
+                        {dimension}
+                    </h6>
+                    <h6 className="card-subtitle my-3 text-muted small">
+                        Residents:
                     </h6>
                     {!isLoading ? (
                         <ul>
                             {characters.map(({ id, name }) => id ? (
-                                <li key={`epi_${id}`} className="card-subtitle mb-2 text-muted small">
+                                <li key={`loc_${id}`} className="card-subtitle mb-2 text-muted small">
                                     {name}
                                 </li>
                             ) : "N/A")}
-                            {charactersId.length > 5 && <h6>and many many others...</h6>}
+                            {residentsId.length > 5 && <h6>and many many others...</h6>}
                         </ul>
                     ) : <Loader/>}
                 </div>
@@ -57,9 +60,11 @@ export const Episode = ({ name, air_date: airDate, episode, characters: characte
     );
 };
 
-Episode.propTypes = {
+export default Location;
+
+Location.propTypes = {
     name: PropTypes.string,
-    air_date: PropTypes.string,
-    episode: PropTypes.string,
-    characters: PropTypes.array
+    type: PropTypes.string,
+    dimension: PropTypes.string,
+    residents: PropTypes.array
 };

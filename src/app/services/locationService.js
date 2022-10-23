@@ -3,8 +3,12 @@ import httpService from "./httpService.js";
 const locationEndpoint = "location/";
 
 const locationService = {
-    getAll: async() => {
-        const { data } = await httpService.get(locationEndpoint);
+    getAll: async page => {
+        const { data } = await httpService.get(locationEndpoint, { params: { page } });
+        return data;
+    },
+    getFilteredByName: async(name, page) => {
+        const { data } = await httpService.get(locationEndpoint, { params: { name, page } });
         return data;
     },
     get: async id => {

@@ -7,6 +7,10 @@ const episodeService = {
         const { data } = await httpService.get(episodeEndpoint, { params: { page } });
         return data;
     },
+    getFilteredByName: async(name, page) => {
+        const { data } = await httpService.get(episodeEndpoint, { params: { name, page } });
+        return data;
+    },
     get: async id => {
         const { data } = await httpService.get(episodeEndpoint + id);
         return data;
