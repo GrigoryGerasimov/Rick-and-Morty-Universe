@@ -57,5 +57,9 @@ body {
 }
 
 .characters-card {
-    height: 750px !important;
+    height: 850px !important;
+}
+
+.locations-card {
+    height: 350px !important;
 }

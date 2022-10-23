@@ -1,20 +1,26 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { Pagination } from "../../../components/Pagination";
 import { useCharacters } from "../../../hooks/useCharacters";
+import { useSearch } from "../../../hooks/useSearch.jsx";
 import Character from "./Character.jsx";
 
 const CharactersList = () => {
-    const { charactersData, getAllCharacters } = useCharacters();
-    const { results: characters, info: { pages } } = useMemo(() => charactersData, [charactersData]);
+    const { charactersData, getFilteredCharactersByName } = useCharacters();
+    const { results: characters, info: { pages } } = charactersData;
     const [currentPage, setCurrentPage] = useState(1);
+    const { searchValue } = useSearch();
 
     const handlePageChange = pageIndex => {
         setCurrentPage(pageIndex);
     };
 
     useEffect(() => {
-        getAllCharacters(currentPage);
-    }, [currentPage]);
+        setCurrentPage(1);
+    }, [searchValue]);
+
+    useEffect(() => {
+        getFilteredCharactersByName(searchValue, currentPage);
+    }, [searchValue, currentPage]);
 
     return (
         <div className="container">

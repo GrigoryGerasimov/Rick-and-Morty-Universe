@@ -7,6 +7,10 @@ const characterService = {
         const { data } = await httpService.get(characterEndpoint, { params: { page } });
         return data;
     },
+    getFilteredByName: async(name, page) => {
+        const { data } = await httpService.get(characterEndpoint, { params: { name, page } });
+        return data;
+    },
     get: async id => {
         const { data } = await httpService.get(characterEndpoint + id);
         return data;

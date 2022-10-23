@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 const Character = ({ name, status, species, type, gender, image, origin, location, episode }) => {
     const [episodes, setEpisodes] = useState([]);
     const [isLoading, setLoading] = useState(true);
-    const { getMultipleEpisodesData } = useEpisodes();
+    const { getMultipleEpisodesById } = useEpisodes();
 
     const episodesId = useMemo(() => {
         return episode.map(e => e.slice(e.lastIndexOf("/") + 1));
@@ -15,14 +15,14 @@ const Character = ({ name, status, species, type, gender, image, origin, locatio
 
     const getMultipleEpisodes = useCallback(async() => {
         try {
-            const episodesData = await getMultipleEpisodesData(episodesId.slice(0, 5));
+            const episodesData = await getMultipleEpisodesById(episodesId.slice(0, 5));
             setEpisodes(episodesData);
         } catch (error) {
             toast.error(error.response.data.error);
         } finally {
             setLoading(false);
         }
-    }, [getMultipleEpisodesData, episodesId]);
+    }, [getMultipleEpisodesById, episodesId]);
 
     useEffect(() => {
         getMultipleEpisodes();
@@ -66,10 +66,10 @@ const Character = ({ name, status, species, type, gender, image, origin, locatio
                     </h5>
                     {!isLoading ? (
                         <ul>
-                            {episodes.map(({ id, episode, name }) => (
-                                <li key={id} className="card-subtitle mb-2 text-muted small">{episode} - {name}</li>
-                            ))}
-                            {episodesId.length > 5 && <h6>and others...</h6>}
+                            {episodes.map(({ id, episode, name }) => id ? (
+                                <li key={`cha_${id}`} className="card-subtitle mb-2 text-muted small">{episode} - {name}</li>
+                            ) : "N/A")}
+                            {episodesId.length > 5 && <h6>and many many others...</h6>}
                         </ul>
                     ) : <Loader/>}
                 </div>

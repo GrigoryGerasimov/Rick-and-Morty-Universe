@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import { episodeService } from "../services";
 import Loader from "../components/Loader.jsx";
@@ -10,7 +10,7 @@ export const useEpisodes = () => useContext(EpisodesContext);
 
 export const EpisodesProvider = ({ children }) => {
     const [isLoading, setLoading] = useState(true);
-    const [episodesData, setEpisodesData] = useState({});
+    const [episodesData, setEpisodesData] = useState([]);
     const [singleEpisodeData, setSingleEpisodeData] = useState({});
 
     const errorCatcher = useCallback(error => {
@@ -28,7 +28,16 @@ export const EpisodesProvider = ({ children }) => {
         }
     };
 
-    const getSingleEpisodeData = async id => {
+    const getFilteredEpisodesByName = async(name = "", page = 1) => {
+        try {
+            const data = await episodeService.getFilteredByName(name, page);
+            setEpisodesData(data);
+        } catch (error) {
+            errorCatcher(error);
+        }
+    };
+
+    const getSingleEpisodeById = async id => {
         try {
             const data = await episodeService.get(id);
             setSingleEpisodeData(data);
@@ -37,7 +46,7 @@ export const EpisodesProvider = ({ children }) => {
         }
     };
 
-    const getMultipleEpisodesData = async(...id) => {
+    const getMultipleEpisodesById = async(...id) => {
         try {
             const data = await episodeService.get(id);
             return !Array.isArray(data) && typeof data === "object" ? [data] : data;
@@ -51,13 +60,21 @@ export const EpisodesProvider = ({ children }) => {
     }, []);
 
     return (
-        <EpisodesContext.Provider value={{
+        <EpisodesContext.Provider value={useMemo(() => ({
             episodesData,
             singleEpisodeData,
             getAllEpisodes,
-            getSingleEpisodeData,
-            getMultipleEpisodesData
-        }}>
+            getSingleEpisodeById,
+            getMultipleEpisodesById,
+            getFilteredEpisodesByName
+        }), [
+            episodesData,
+            singleEpisodeData,
+            getAllEpisodes,
+            getSingleEpisodeById,
+            getMultipleEpisodesById,
+            getFilteredEpisodesByName
+        ])}>
             {!isLoading ? children : <Loader/>}
         </EpisodesContext.Provider>
     );

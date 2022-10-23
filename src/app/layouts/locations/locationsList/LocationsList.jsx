@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Episode } from "./Episode.jsx";
-import { Pagination } from "../../../components/Pagination.jsx";
-import { useEpisodes } from "../../../hooks/useEpisodes.jsx";
+import { Pagination } from "../../../components/Pagination";
+import { useLocations } from "../../../hooks/useLocations";
+import Location from "./Location.jsx";
 import { useSearch } from "../../../hooks/useSearch.jsx";
 
-const EpisodesList = () => {
-    const { episodesData, getFilteredEpisodesByName } = useEpisodes();
-    const { results: episodes, info: { pages } } = episodesData;
+const LocationsList = () => {
+    const { locationsData, getFilteredLocationsByName } = useLocations();
+    const { results: locations, info: { pages } } = locationsData;
     const [currentPage, setCurrentPage] = useState(1);
     const { searchValue } = useSearch();
 
@@ -19,16 +19,16 @@ const EpisodesList = () => {
     }, [searchValue]);
 
     useEffect(() => {
-        getFilteredEpisodesByName(searchValue, currentPage);
+        getFilteredLocationsByName(searchValue, currentPage);
     }, [searchValue, currentPage]);
 
     return (
         <div className="container">
             <div className="row">
-                {episodes.map((episode) => (
-                    <Episode
-                        key={episode.id}
-                        {...episode}
+                {locations.map((location) => (
+                    <Location
+                        key={location.id}
+                        {...location}
                     />
                 ))}
             </div>
@@ -43,4 +43,4 @@ const EpisodesList = () => {
     );
 };
 
-export default EpisodesList;
+export default LocationsList;
